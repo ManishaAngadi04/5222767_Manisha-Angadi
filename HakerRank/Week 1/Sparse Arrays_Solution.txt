@@ -1,4 +1,4 @@
-Problem 4 - Sparse Arrays
+//Problem 4 - Sparse Arrays
 
 #include <stdio.h>
 #include <string.h>
