@@ -243,6 +243,7 @@
  242 cd
  243 rm -r new
  244 ls
+ 245 history
  245 vi sum.c
  246 gcc sum.c && ./a.out
  247 vi filecmd
