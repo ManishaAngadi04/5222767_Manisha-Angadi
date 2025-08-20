@@ -1,0 +1,24 @@
+//Problem 11 - Recursive Digit Sum
+
+#include<stdio.h>
+#include<string.h>
+
+int superDigit(char n[], int k){
+    long long digit_sum=0;
+    
+    for(int i=0;i<strlen(n);i++){
+        digit_sum += (n[i] - '0');
+    }
+    digit_sum *= k;
+    
+    if(digit_sum==0) return 0;
+    int result=1+(digit_sum - 1)%9;
+    return result;
+}
+int main(){
+    char n[100005];
+    int k;
+    scanf("%s %d", n,&k);
+    printf("%d\n",superDigit(n,k));
+    return 0;
+}

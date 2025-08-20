@@ -1,0 +1,21 @@
+//Problem 13 - Sum vs XOR
+
+#include<stdio.h>
+
+long long sumXor(long long n){
+    if(n==0) return 1;
+    
+    int zeroBits=0;
+    while(n>0){
+        if((n&1LL)==0)
+        zeroBits++;
+        n>>=1;
+    }
+    return 1LL<<zeroBits;
+}
+int main(){
+    long long n;
+    scanf("%lld", &n);
+    printf("%lld\n",sumXor(n));
+    return 0;
+}
