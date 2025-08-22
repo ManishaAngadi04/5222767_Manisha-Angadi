@@ -1,0 +1,57 @@
+//Problem 1 - The Bomberman Game
+
+#include<stdio.h>
+#define MAX 205
+
+int R,C;
+char g[MAX][MAX],tmp[MAX][MAX];
+
+void fill(char x[MAX][MAX]){
+    for(int i=0;i<R;i++){
+        for(int j=0;j<C;j++)
+        x[i][j]='O';
+        x[i][C]='\0';
+    }
+}
+void boom(char in[MAX][MAX], char out[MAX][MAX]){
+    fill(out);
+    int d[5][2]={{0,0},{1,0},{-1,0},{0,1},{0,-1}};
+    for(int i=0;i<R;i++) 
+    for(int j=0;j<C;j++)
+    if(in[i][j]=='O')
+    for(int k=0;k<5;k++){
+        int ni=i+d[k][0],nj=j+d[k][1];
+        if(ni>=0&&ni<R&&nj>=0&&nj<C)
+        out[ni][nj]='.';
+    }
+}
+int main(){
+    long long N;
+    scanf("%d %d %lld",&R,&C,&N);
+    for(int i=0;i<R;i++)
+    scanf("%s",g[i]);
+    
+    if(N==1){
+        for(int i=0;i<R;i++)
+        puts(g[i]);
+    }
+    else if(N%2==0){
+        fill(tmp);
+        for(int i=0;i<R;i++)
+        puts(tmp[i]);
+    }
+    else{
+        char x[MAX][MAX], y[MAX][MAX];
+        boom(g,x);
+        if(N%4==3)
+        for(int i=0;i<R;i++)
+        puts(x[i]);
+        else{
+            boom(x,y);
+            for(int i=0;i<R;i++)
+            puts(y[i]);
+        }
+    }
+        return 0;
+
+}
