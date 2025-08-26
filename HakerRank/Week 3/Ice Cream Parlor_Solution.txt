@@ -1,0 +1,35 @@
+//Problem 9 - Ice Cream Parlor
+
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+#include<stdlib.h>
+
+int main(){
+    int n,m;
+    scanf("%d",&n);
+    int i=0;
+    for(;i<n;i++)
+    {
+        int c;
+        scanf("%d",&c);
+        scanf("%d",&m);
+        int data[m];
+        int j=0;
+        for(;j<m;j++){
+            scanf("%d",&data[j]);
+            
+        }
+        int k=0;
+        for(j=0;j<m;j++){
+            for(k=j+1;k<m;k++){
+                if(data[j]+data[k]==c){
+                    printf("%d %d\n",j+1,k+1);
+                    goto flag;
+                }
+            }
+        }
+        flag:;
+    }
+    return 0;
+}
