@@ -1,0 +1,86 @@
+//Problem 13 - Simple Text Editor
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define INITLEN 1000000
+#define MAXOPS 1000000
+
+typedef struct{
+    int type;
+    char *data;
+} Operation;
+
+int main() { 
+    int Q;
+    scanf("%d", &Q);
+    size_t capacity = INITLEN;
+    char *text=calloc(capacity, sizeof(char));
+    int len = 0;
+    
+    Operation *stack=malloc(MAXOPS * sizeof(Operation));
+    int top=-1;
+    
+    for(int i=0;i<Q;i++)  
+    {
+        int type;
+        scanf("%d", &type);
+        
+        if(type==1){
+            char W[100000];
+            scanf("%s", W);
+            int wlen = strlen(W);
+            
+            while(len + wlen >= capacity){
+                capacity *= 2;
+                text = realloc(text, capacity);
+            }
+            strcpy(text+len, W);
+            len += wlen;
+            
+            stack[++top].type=1;
+            stack[top].data=strdup(W);
+    
+        } else if(type==2){
+            int k;
+            scanf("%d",&k);
+            char *deleted=malloc(k+1);
+            strncpy(deleted, text+(len - k),k);
+            deleted[k]='\0';
+            
+            len -= k;
+            text[len]='\0';
+            
+            stack[++top].type=2;
+            stack[top].data=deleted;
+        } else if(type==3){
+            int k; scanf("%d", &k);
+            if(k<=len){
+                printf("%c\n",text[k-1]);
+            }
+        } else if(type==4){
+            if(top>=0){
+            Operation last=stack[top--];
+            if(last.type==1){
+                int l=strlen(last.data);
+                len -= l;
+                text[len]='\0';
+            } else if(last.type==2){
+                int l=strlen(last.data);
+                
+                while(len+1>=capacity){
+                    capacity *= 2;
+                    text = realloc(text, capacity);
+                }
+                strcpy(text+len,last.data);
+                len += l;
+            }
+            free(last.data);
+        }
+        }
+    }
+    free(text);
+    free(stack);
+    return 0;
+}

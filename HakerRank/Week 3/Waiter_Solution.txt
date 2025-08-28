@@ -1,0 +1,49 @@
+//Problem 12 - Waiter
+
+#include <stdio.h>
+#include <stdlib.h>
+#include<stdbool.h>
+
+bool isPrime(int x){
+    if(x<2) return false;
+    for(int i=2;i*i<=x;i++) if(x%i==0) return false;
+    return true;
+}
+void generatePrimes(int *primes,int q){
+    int num=2,count=0;
+    while(count<q) if(isPrime(num)) primes[count++]=num++;
+    else num++;
+}
+int * waiter(int* number, int n, int q, int* result_size){
+    int *answers=malloc(n*sizeof(int)), ansIndex=0;
+    int *primes=malloc(q*sizeof(int));
+    generatePrimes(primes, q);
+    
+    int *A=malloc(n*sizeof(int)),A_size=n;
+    for(int i=0;i<n;i++) A[i]=number[i];
+    
+    for(int i=0;i<q;i++){
+        int *nextA=malloc(n*sizeof(int)), nextA_size=0;
+        int *B=malloc(n*sizeof(int)),B_size=0;
+        for(int j=A_size-1;j>=0;j--)
+        (A[j]%primes[i]==0)?(B[B_size++]=A[j]):(nextA[nextA_size++]=A[j]);
+        for(int j=B_size-1;j>=0;j--) answers[ansIndex++]=B[j];
+        free(A); free(B);
+        A=nextA; A_size=nextA_size;
+    }
+    for(int j=A_size-1;j>=0;j--) answers[ansIndex++]=A[j];
+    *result_size=ansIndex;
+    free(A); free(primes);
+    return answers;
+}
+int main(){
+    int n,q;
+    scanf("%d %d", &n,&q);
+    int *number=malloc(n*sizeof(int));
+    for(int i=0;i<n;i++) scanf("%d",&number[i]);
+    
+    int result_size, *result=waiter(number, n, q, &result_size);
+    for(int i=0;i<result_size;i++) printf("%d\n",result[i]);
+    free(number); free(result);
+    return 0;
+}
