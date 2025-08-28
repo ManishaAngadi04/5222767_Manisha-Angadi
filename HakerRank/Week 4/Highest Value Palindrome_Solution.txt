@@ -1,0 +1,48 @@
+//Problem 9 - Highest Value Palindrome
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    int n, k;
+    scanf("%d %d", &n, &k);
+    char s[n+1];
+    scanf("%s", s);
+    int l = 0, r = n-1;
+    int diff[n];
+    memset(diff, 0, sizeof(diff));
+    int changes = 0;
+    while (l < r) {
+        if (s[l] != s[r]) {
+            if (s[l] > s[r]) s[r] = s[l];
+            else s[l] = s[r];
+            diff[l] = diff[r] = 1;
+            changes++;
+        }
+        l++; r--;
+    }
+    if (changes > k) {
+        printf("-1\n");
+        return 0;
+    }
+    l = 0; r = n-1;
+    int extra = k - changes;
+    while (l <= r) {
+        if (l == r) {
+            if (extra > 0) s[l] = '9';
+        } else {
+            if (s[l] != '9') {
+                if (diff[l] && extra > 0) {
+                    s[l] = s[r] = '9';
+                    extra--;
+                } else if (!diff[l] && extra > 1) {
+                    s[l] = s[r] = '9';
+                    extra -= 2;
+                }
+            }
+        }
+        l++; r--;
+    }
+    printf("%s\n", s);
+    return 0;
+}

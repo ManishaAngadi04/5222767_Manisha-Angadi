@@ -1,0 +1,85 @@
+//Problem 5 - Jesse and Cookies
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAXN 1000000
+
+int heap[MAXN];
+int heapSize = 0;
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void heapifyUp(int i) {
+    while (i > 0) {
+        int parent = (i - 1) / 2;
+        if (heap[parent] > heap[i]) {
+            swap(&heap[parent], &heap[i]);
+            i = parent;
+        } else break;
+    }
+}
+
+void heapifyDown(int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < heapSize && heap[left] < heap[smallest]) smallest = left;
+    if (right < heapSize && heap[right] < heap[smallest]) smallest = right;
+
+    if (smallest != i) {
+        swap(&heap[i], &heap[smallest]);
+        heapifyDown(smallest);
+    }
+}
+
+void push(int val) {
+    heap[heapSize++] = val;
+    heapifyUp(heapSize - 1);
+}
+
+int pop() {
+    if (heapSize == 0) return -1;
+    int minVal = heap[0];
+    heap[0] = heap[--heapSize];
+    heapifyDown(0);
+    return minVal;
+}
+
+int top() {
+    if (heapSize == 0) return -1;
+    return heap[0];
+}
+
+int main() {
+    int n, k;
+    scanf("%d %d", &n, &k);
+
+    for (int i = 0; i < n; i++) {
+        int val;
+        scanf("%d", &val);
+        push(val);
+    }
+
+    int operations = 0;
+    while (heapSize > 1 && top() < k) {
+        int least = pop();
+        int secondLeast = pop();
+
+        int newSweetness = least + 2 * secondLeast;
+        push(newSweetness);
+        operations++;
+    }
+
+    if (top() >= k)
+        printf("%d\n", operations);
+    else
+        printf("-1\n");
+
+    return 0;
+}

@@ -1,0 +1,57 @@
+//Problem 10 - Lily's Homework
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int value;
+    int index;
+} Pair;
+
+int cmp(const void *a, const void *b) {
+    return ((Pair*)a)->value - ((Pair*)b)->value;
+}
+
+int minSwaps(int *arr, int n, int ascending) {
+    Pair *p = (Pair*)malloc(n * sizeof(Pair));
+    for (int i = 0; i < n; i++) {
+        p[i].value = arr[i];
+        p[i].index = i;
+    }
+    qsort(p, n, sizeof(Pair), cmp);
+    if (!ascending) {
+        for (int i = 0; i < n/2; i++) {
+            Pair temp = p[i];
+            p[i] = p[n-1-i];
+            p[n-1-i] = temp;
+        }
+    }
+    int *visited = (int*)calloc(n, sizeof(int));
+    int swaps = 0;
+    for (int i = 0; i < n; i++) {
+        if (visited[i] || p[i].index == i) continue;
+        int cycle = 0;
+        int j = i;
+        while (!visited[j]) {
+            visited[j] = 1;
+            j = p[j].index;
+            cycle++;
+        }
+        if (cycle > 1) swaps += cycle - 1;
+    }
+    free(p);
+    free(visited);
+    return swaps;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    int *arr = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+    int asc = minSwaps(arr, n, 1);
+    int desc = minSwaps(arr, n, 0);
+    printf("%d\n", asc < desc ? asc : desc);
+    free(arr);
+    return 0;
+}

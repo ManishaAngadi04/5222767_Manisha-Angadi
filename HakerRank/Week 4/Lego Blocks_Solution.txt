@@ -1,0 +1,58 @@
+//Problem 3 - Lego Blocks
+
+#include <stdio.h>
+#include <string.h>
+#define MOD 1000000007
+
+long long modpow(long long base, int exp) {
+    long long result = 1;
+    while (exp > 0) {
+        if (exp % 2 == 1) result = (result * base) % MOD;
+        base = (base * base) % MOD;
+        exp /= 2;
+    }
+    return result;
+}
+
+int legoBlocks(int n, int m) {
+    long long row[m+1];
+    long long total[m+1];
+    long long solid[m+1];
+
+    memset(row, 0, sizeof(row));
+    row[0] = 1;
+
+    // Step 1: ways to build a single row
+    for (int w = 1; w <= m; w++) {
+        for (int k = 1; k <= 4; k++) {
+            if (w - k >= 0)
+                row[w] = (row[w] + row[w-k]) % MOD;
+        }
+    }
+
+    // Step 2: total walls ignoring cracks
+    for (int w = 1; w <= m; w++) {
+        total[w] = modpow(row[w], n);
+    }
+
+    // Step 3: remove invalid (cracked) walls
+    for (int w = 1; w <= m; w++) {
+        solid[w] = total[w];
+        for (int k = 1; k < w; k++) {
+            solid[w] = (solid[w] - (solid[k] * total[w-k]) % MOD + MOD) % MOD;
+        }
+    }
+
+    return (int)solid[m];
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+    while (t--) {
+        int n, m;
+        scanf("%d %d", &n, &m);
+        printf("%d\n", legoBlocks(n, m));
+    }
+    return 0;
+}

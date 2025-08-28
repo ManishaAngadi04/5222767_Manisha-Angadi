@@ -1,0 +1,34 @@
+//Problem 7 - Queries with Fixed Length
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int val, idx;
+} Node;
+
+int main() {
+    int n, q;
+    scanf("%d %d", &n, &q);
+    int *arr = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+    while (q--) {
+        int d;
+        scanf("%d", &d);
+        Node *deque = (Node*)malloc((n+1) * sizeof(Node));
+        int front = 0, back = 0;
+        int minVal = 1000000000;
+        for (int i = 0; i < n; i++) {
+            while (back > front && deque[back-1].val <= arr[i]) back--;
+            deque[back++] = (Node){arr[i], i};
+            if (deque[front].idx <= i - d) front++;
+            if (i >= d - 1) {
+                if (deque[front].val < minVal) minVal = deque[front].val;
+            }
+        }
+        printf("%d\n", minVal);
+        free(deque);
+    }
+    free(arr);
+    return 0;
+}
